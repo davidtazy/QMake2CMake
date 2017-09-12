@@ -55,6 +55,7 @@ class QMake:
                     else:
                         op = 0
 
+
                     if matchObj.group(1) == "CONFIG":
                         sl = self.CONFIG
                     elif matchObj.group(1) == "QT":
