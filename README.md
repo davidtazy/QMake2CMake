@@ -1,4 +1,4 @@
-# QMakeToCMake
+# QMakeToCMake [![Build Status](https://travis-ci.org/davidtazy/QMakeToCMake.svg?branch=master)](https://travis-ci.org/davidtazy/QMakeToCMake)
 helper script to move qmake based project to cmake
 alpha
 
