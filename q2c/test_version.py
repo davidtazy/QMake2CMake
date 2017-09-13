@@ -1,5 +1,5 @@
 from unittest import TestCase
-from cmake_writer import Version
+from .cmake_writer import Version
 
 
 
