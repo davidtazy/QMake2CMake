@@ -34,7 +34,6 @@ class TestCMakeWriter(TestCase):
         w.enable_qt_feature(auto_moc=True)
 
         w.add_find_packages("Qt5Core")
-
         w.target_link_libraries("Qt5::Core")
 
         w.write()
