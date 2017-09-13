@@ -1,5 +1,8 @@
 from setuptools import setup
 
+
+
+
 setup(name='QMakeToCMake',
       version='0.1',
       description='help to convert qmake .pro files in CMakeLists.txt',
@@ -17,4 +20,5 @@ setup(name='QMakeToCMake',
       install_requires=[
           'semver',
       ],
+      test_suite="tests",
       zip_safe=False)
