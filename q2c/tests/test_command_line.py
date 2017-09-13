@@ -1,5 +1,5 @@
 from unittest import TestCase
-from .command_line import get_pro_file_from_path
+from q2c.command_line import get_pro_file_from_path
 import tempfile
 import shutil
 import os

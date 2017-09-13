@@ -1,5 +1,5 @@
 from unittest import TestCase
-from .qmake_parser import QMakeParser
+from q2c.qmake_parser import QMakeParser
 __author__ = 'ddeda'
 import tempfile
 import shutil

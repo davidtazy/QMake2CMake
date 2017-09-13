@@ -1,5 +1,5 @@
 from unittest import TestCase
-from .cmake_writer import CMakeWriter
+from q2c.cmake_writer import CMakeWriter
 import tempfile
 import shutil
 import os

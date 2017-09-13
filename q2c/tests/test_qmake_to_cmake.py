@@ -1,8 +1,8 @@
 from unittest import TestCase
-from .qmake_to_cmake import QMakeToCMake
+from q2c.qmake_to_cmake import QMakeToCMake
 
-from .qmake_parser import  QMakeParser
-from .cmake_writer import  CMakeWriter
+from q2c.qmake_parser import  QMakeParser
+from q2c.cmake_writer import  CMakeWriter
 __author__ = 'ddeda'
 
 
