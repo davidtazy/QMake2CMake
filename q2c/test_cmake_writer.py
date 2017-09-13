@@ -22,7 +22,7 @@ class TestCMakeWriter(TestCase):
             CMakeWriter(self.temp_dir)
 
     def test_write_cmakelists(self):
-        w = CMakeWriter(self.temp_dir)
+        w = CMakeWriter()#self.temp_dir)
 
         w.setCMakeMinimum("3.2.0")
         w.setProjectName("testProjectConversion")

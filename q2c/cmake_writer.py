@@ -1,6 +1,20 @@
 import semver as sv
 import os
+import sys
+import contextlib
 
+@contextlib.contextmanager
+def smart_open(filename=None):
+    if filename and filename != '-':
+        fh = open(filename, 'w')
+    else:
+        fh = sys.stdout
+
+    try:
+        yield fh
+    finally:
+        if fh is not sys.stdout:
+            fh.close()
 
 class Version:
     version = sv.VersionInfo(0, 0, 0, None, None)
@@ -33,36 +47,43 @@ class Var:
 
 
 class CMakeWriter:
+
     CMakeListsFileName='CMakeLists.txt'
 
-    minimum = Version("3.0.0")
-    project_name = ""
-    vars = []
-    cmakefile = ""
-    target_name=""
-    add_binary="add_library_executable"
-    target_sources=""
-    link_libraries = []
-    is_target_executable = False
-    defines = []
-    include_path=[]
-    cpp11 = False
+    def __init__(self, path = None):
 
-    enable_qt5_moc=False
-    enable_qt5_uic=False
-    enable_qt5_rcc =False
+        self.minimum = Version("3.0.0")
+        self.project_name = ""
+        self.vars = []
+        self.cmakefile = None
+        self.target_name="undef_target_name"
+        self.add_binary= None
+        self.target_sources=""
+        self.link_libraries = []
+        self.subdirectories =[]
+        self.is_target_executable = False
+        self.defines = []
+        self.include_path=[]
+        self.cpp11 = False
+        self.enable_qt5_moc=False
+        self.enable_qt5_uic=False
+        self.enable_qt5_rcc =False
+        self.std_out = False
+        self.find_packages = []
 
+        if path is not None:
+            self.cmakefile = os.path.join(path, self.CMakeListsFileName)
+            if os.path.isfile(self.cmakefile) is True:
+                raise ValueError("CmakeWriter.__init__({}) file already exists".format(self.cmakefile))
+            #ensure target name using directory name
+            if len(self.target_name) is 0:
+                self.target_name = os.path.basename(path)
 
-    find_packages = []
+    def isSubDirProject(self):
+        return self.add_binary is None
 
-    def __init__(self, path):
-        self.cmakefile = os.path.join(path, self.CMakeListsFileName)
-        if os.path.isfile(self.cmakefile) is True:
-            raise ValueError("CmakeWriter.__init__({}) file already exists".format(self.cmakefile))
-
-        #ensure target name using directory name
-        if len(self.target_name) is 0:
-            self.target_name = os.path.basename(path)
+    def isLibOrAppProject(self):
+        return self.add_binary is not None
 
     def setCMakeMinimum(self, minimum):
         self.cmake_minimum = Version(minimum)
@@ -94,6 +115,10 @@ class CMakeWriter:
         self.include_path.append(path)
 
 
+    def add_subdirectory(self, dir):
+        self.subdirectories.append(dir)
+
+
     def add_define(self,define):
         self.defines.append(define)
 
@@ -110,60 +135,77 @@ class CMakeWriter:
         self.enable_qt5_moc = auto_moc
         self.enable_qt5_uic = auto_ui
 
+    def enable_qt_auto_uic(self):
+        self.enable_qt5_uic = True
+
+    def enable_qt_auto_moc(self):
+        self.enable_qt5_moc = True
+
+    def enable_qt_auto_rcc(self):
+        self.enable_qt5_rcc = True
+
+    def enable_cpp11(self):
+        self.cpp11 = True
+
     def write(self):
 
-        f = open(self.cmakefile, 'w')
+        with smart_open(self.cmakefile) as f:
 
-        f.writelines("cmake_minimum_required(VERSION {} )\n".format(self.minimum.toString()))
-        if len(self.project_name) > 0:
-            f.writelines("project({})\n".format(self.project_name))
+            f.writelines("cmake_minimum_required(VERSION {} )\n".format(self.minimum.toString()))
+            if len(self.project_name) > 0:
+                f.writelines("project({})\n".format(self.project_name))
 
-        if self.enable_qt5_rcc or  self.enable_qt5_moc or  self.enable_qt5_uic:
-           f.writelines("set(CMAKE_INCLUDE_CURRENT_DIR ON)\n")
+            if self.enable_qt5_rcc or  self.enable_qt5_moc or  self.enable_qt5_uic:
+                f.writelines("set(CMAKE_INCLUDE_CURRENT_DIR ON)\n")
 
-        if self.enable_qt5_rcc :
-            f.writelines("set(CMAKE_AUTORCC ON)\n")
+            if self.enable_qt5_rcc :
+                f.writelines("set(CMAKE_AUTORCC ON)\n")
 
-        if   self.enable_qt5_uic:
-             f.writelines("set(CMAKE_AUTOUIC ON)\n")
+            if   self.enable_qt5_uic:
+                f.writelines("set(CMAKE_AUTOUIC ON)\n")
 
-        if  self.enable_qt5_moc :
-             f.writelines("set(CMAKE_AUTOMOC ON)\n")
+            if  self.enable_qt5_moc :
+                f.writelines("set(CMAKE_AUTOMOC ON)\n")
 
-        for package in self.find_packages:
-            f.writelines(("find_package({})\n").format(package))
+            for package in self.find_packages:
+                f.writelines(("find_package({})\n").format(package))
 
-        #cpp11
-        if self.cpp11 is True:
-            f.writelines("set(CMAKE_CXX_STANDARD 11)\n")
-            f.writelines("set(CMAKE_CXX_STANDARD_REQUIRED ON)\n")
+            #cpp11
+            if self.cpp11 is True:
+                f.writelines("set(CMAKE_CXX_STANDARD 11)\n")
+                f.writelines("set(CMAKE_CXX_STANDARD_REQUIRED ON)\n")
 
-        for v in self.vars:
-            f.writelines(v.toString())
+            for v in self.vars:
+                f.writelines(v.toString())
 
-        #add_library or add_executable
-        f.writelines("{}({} {})\n".format(self.add_binary,self.target_name,self.target_sources))
+            #add_library or add_executable
+            if self.isLibOrAppProject():
+                f.writelines("{}({} {})\n".format(self.add_binary,self.target_name,self.target_sources))
 
-        #link
-        if len(self.link_libraries) > 0:
-            f.writelines("target_link_libraries({} PRIVATE {})\n".format(self.target_name," ".join(self.link_libraries)))
+            #link
+            if len(self.link_libraries) > 0:
+                f.writelines("target_link_libraries({} PRIVATE {})\n".format(self.target_name," ".join(self.link_libraries)))
 
-        #include path
-        for include in self.include_path:
-            f.writelines('target_include_directories(%s PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/%s> $<INSTALL_INTERFACE:%s>)\n'%(self.target_name,include,include))
+            #include path
+            for include in self.include_path:
+                f.writelines('target_include_directories(%s PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/%s> $<INSTALL_INTERFACE:%s>)\n'%(self.target_name,include,include))
 
-        #defines
-        for define in self.defines:
-            f.writelines("target_compile_definitions({} PRIVATE  {})\n"
-                         .format(self.target_name,define))
+            #defines
+            for define in self.defines:
+                f.writelines("target_compile_definitions({} PRIVATE  {})\n"
+                             .format(self.target_name,define))
+            if self.isLibOrAppProject():
+                f.writelines('set_target_properties({} PROPERTIES DEBUG_POSTFIX "d")\n'.format(self.target_name))
 
-        f.writelines('set_target_properties({} PROPERTIES DEBUG_POSTFIX "d")\n'.format(self.target_name))
+            #install
+            if self.isLibOrAppProject():
+                dest = "Libs"
+                if self.is_target_executable:
+                    dest = "Bin"
+                f.writelines("install(TARGETS {} DESTINATION {})\n".format(self.target_name,dest))
 
-        #install
-        dest = "Libs"
-        if self.is_target_executable:
-            des = "Bin"
-        f.writelines("install(TARGETS {} DESTINATION {})\n".format(self.target_name,dest))
+            # add subdir
+            for subdir in self.subdirectories:
+                f.writelines("add_subdirectory({})\n".format(subdir))
 
-
-        f.close()
+        return self.cmakefile
