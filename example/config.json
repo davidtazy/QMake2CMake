@@ -1,0 +1,30 @@
+{
+  "des": {
+    "function": "target_link_libraries",
+    "arg": "Deu"
+  },
+  "veh": {
+    "function": "target_link_libraries",
+    "arg": "Agent"
+  },
+  "mission-a9": {
+    "function": "target_link_libraries",
+    "arg": "MissionA9"
+  },
+  "librpcdesserver": {
+    "function": "target_link_libraries",
+    "arg": "RpcServer"
+  },
+  "messenger_transactions": {
+    "function": "target_link_libraries",
+    "arg": "MessengerTransactions"
+  },
+  "mission_synchro": {
+    "function": "target_link_libraries",
+    "arg": "MissionSynchro"
+  },
+  "navclient": {
+    "function": "target_link_libraries",
+    "arg": "NavClient"
+  }
+}
