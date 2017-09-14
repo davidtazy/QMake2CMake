@@ -46,6 +46,13 @@ class Var:
         return "set({} {})\n".format(self.name, self.value)
 
 
+class CMakeFileAlreadyExistsError(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
 class CMakeWriter:
 
     CMakeListsFileName='CMakeLists.txt'
@@ -74,7 +81,7 @@ class CMakeWriter:
         if path is not None:
             self.cmakefile = os.path.join(path, self.CMakeListsFileName)
             if os.path.isfile(self.cmakefile) is True:
-                raise ValueError("CmakeWriter.__init__({}) file already exists".format(self.cmakefile))
+                raise CMakeFileAlreadyExistsError("CmakeWriter.__init__({}) file already exists".format(self.cmakefile))
             #ensure target name using directory name
             if len(self.target_name) is 0:
                 self.target_name = os.path.basename(path)

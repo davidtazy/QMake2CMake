@@ -1,4 +1,5 @@
 from .qmake_to_cmake import QMakeToCMake
+from .cmake_writer import CMakeFileAlreadyExistsError
 import os
 
 
@@ -27,16 +28,19 @@ import argparse
 import webbrowser
 
 
-def TryConvert(args):
+def TryConvert(path, dry_run, show):
     converter = QMakeToCMake()
-    pro_file = get_pro_file_from_path(args.path)
-    if args.dry_run is True:
+    pro_file = get_pro_file_from_path(path)
+    if dry_run is True:
         converter.convertToStdOut(pro_file)
     else:
-        converter.convert(pro_file)
-        if args.show:
-            webbrowser.open_new_tab(pro_file)
-            webbrowser.open_new_tab(converter.get_cmakefile())
+        try:
+            converter.convert(pro_file)
+            if show:
+                webbrowser.open_new_tab(pro_file)
+                webbrowser.open_new_tab(converter.get_cmakefile())
+        except CMakeFileAlreadyExistsError as e:
+            print(e.value)
 
 def main():
 
@@ -55,7 +59,7 @@ def main():
     args = parser.parse_args()
 
     if args.recursive is False:
-        TryConvert(args)
+        TryConvert(args.path, args.dry_run, args.show )
     else:
         #recursive mode
         print("recursive mode ")
@@ -69,8 +73,7 @@ def main():
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))
-            args.path = pro_file
-            TryConvert(args)
+            TryConvert(pro_file, args.dry_run, args.show)
             if args.show is True:
                raw_input("press enter to continue")
 

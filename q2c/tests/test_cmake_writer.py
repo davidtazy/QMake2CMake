@@ -1,5 +1,5 @@
 from unittest import TestCase
-from q2c.cmake_writer import CMakeWriter
+from q2c.cmake_writer import CMakeWriter, CMakeFileAlreadyExistsError
 import tempfile
 import shutil
 import os
@@ -18,11 +18,11 @@ class TestCMakeWriter(TestCase):
         f = open(file, 'w')
         f.close()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(CMakeFileAlreadyExistsError):
             CMakeWriter(self.temp_dir)
 
     def test_write_cmakelists(self):
-        w = CMakeWriter()#self.temp_dir)
+        w = CMakeWriter()
 
         w.setCMakeMinimum("3.2.0")
         w.setProjectName("testProjectConversion")
