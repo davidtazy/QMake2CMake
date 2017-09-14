@@ -5,17 +5,17 @@ import os
 
 class QMakeToCMake:
     Modules = ['Core', 'Widgets', 'Gui', 'Network', 'Sql', 'Multimedia', 'WebKit', 'Svg', 'OpenGL', 'PrintSupport',
-               'Script', 'Xml', 'XmlPatterns', 'Qml', 'Positioning', 'Quick', 'Sensors', 'Sql', 'Declarative']
+               'Script', 'Xml', 'XmlPatterns', 'Qml', 'Positioning', 'Quick', 'Sensors', 'Sql', 'Declarative','Test']
     LowerCaseModules = ['core', 'widgets', 'gui', 'network', 'sql', 'multimedia', 'webkit', 'svg', 'opengl',
                         'printsupport', 'script', 'xml', 'xmlPatterns', 'qml', 'positioning', 'quick', 'sensors', 'sql',
-                        'declarative']
+                        'declarative','testlib']
 
     def __init__(self):
-        self.config_function = None
+        self.config_visitor = None
         self.cmakefile = None
 
-    def register_config_function(self, function):
-        self.config_function = function
+    def register_config_visitor(self, config_visitor):
+        self.config_visitor = config_visitor
 
     @staticmethod
     def ToQtModule(module):
@@ -109,9 +109,9 @@ class QMakeToCMake:
             cmake.enable_cpp11()
 
         # customize
-        if self.config_function is not None:
+        if self.config_visitor is not None:
             for config in qmake.CONFIG:
-                self.config_function(cmake, qmake.CONFIG)
+                self.config_visitor.visit(cmake, config)
 
         self.cmakefile =cmake.write()
         print('----------------\nproject created')

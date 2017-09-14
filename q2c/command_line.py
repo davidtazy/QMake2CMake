@@ -1,7 +1,8 @@
 from .qmake_to_cmake import QMakeToCMake
 from .cmake_writer import CMakeFileAlreadyExistsError
+from .config_visitor import ConfigVisitor
 import os
-
+import json
 
 def get_pro_file_from_path(dir):
 
@@ -28,8 +29,24 @@ import argparse
 import webbrowser
 
 
-def TryConvert(path, dry_run, show):
+def dict_from_json_file(json_file):
+    if json_file is None:
+        return None
+
+    with open(json_file) as json_data:
+        return  json.load(json_data)
+
+
+
+def TryConvert(path, dry_run, show, config):
     converter = QMakeToCMake()
+
+    dico = dict_from_json_file(config)
+    visitor = None
+    if dico is not None:
+        visitor = ConfigVisitor(dico)
+
+    converter.register_config_visitor(visitor)
     pro_file = get_pro_file_from_path(path)
     if dry_run is True:
         converter.convertToStdOut(pro_file)
@@ -56,10 +73,13 @@ def main():
     parser.add_argument('-s','--show',help="show result file(s)",
                         action="store_true")
 
+    parser.add_argument('-c','--config',default=None,
+                        help='json file defining dictionnary between CONFIG values in .pro file and cmake function')
+
     args = parser.parse_args()
 
     if args.recursive is False:
-        TryConvert(args.path, args.dry_run, args.show )
+        TryConvert(args.path, args.dry_run, args.show, args.config )
     else:
         #recursive mode
         print("recursive mode ")
@@ -73,7 +93,7 @@ def main():
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))
-            TryConvert(pro_file, args.dry_run, args.show)
+            TryConvert(pro_file, args.dry_run, args.show,args.config)
             if args.show is True:
                raw_input("press enter to continue")
 

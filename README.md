@@ -21,6 +21,7 @@ will be usefull if lots of pro file to convert
 - CONFIG-=qt , no Qt dependencies
 - DEFINES
 - INCLUDEPATH
+- CONFIG custom vars can define new lines on cmakelist.txt with a json config file (see [example/config.json](example/config.json))
 
 # Examples
 
@@ -85,7 +86,7 @@ cd to QMakeToCMake
 pip install .
 # will install commandline app named 'q2c'
 
-usage: q2c [-h] [-n] [-r] [-s] path
+usage: q2c [-h] [-n] [-r] [-s] [-c] path
 
 positional arguments:
   path             directory or file
@@ -95,4 +96,5 @@ optional arguments:
   -n, --dry-run    print conversion on the console
   -r, --recursive  all .pro in directory tree
   -s, --show       show result file(s) , use it with recursive option to survey operations
+  -s, --config     json file defining dictionnary between CONFIG values in .pro file and cmake function
 ```
