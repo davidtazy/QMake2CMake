@@ -66,7 +66,7 @@ class TestCommandLine(TestCase):
         #remove first line from file
         self.remove_first_line_from_file()
 
-        with self.assertRaises(json.JSONDecodeError):
+        with self.assertRaises(ValueError): 
             dict_from_json_file(self.json_file)
 
     def remove_first_line_from_file(self):
