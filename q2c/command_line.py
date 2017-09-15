@@ -59,6 +59,16 @@ def TryConvert(path, dry_run, show, config):
         except CMakeFileAlreadyExistsError as e:
             print(e.value)
 
+def get_all_pro_files_from_dir_tree(dir):
+    pro_files = []
+    for dirpath, subdirs, files in os.walk(dir):
+        for x in files:
+            if x.endswith(".pro"):
+                pro_files.append(os.path.join(dirpath, x))
+                break
+    return pro_files
+
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -81,15 +91,9 @@ def main():
     if args.recursive is False:
         TryConvert(args.path, args.dry_run, args.show, args.config )
     else:
-        #recursive mode
-        print("recursive mode ")
+        print("------- recursive mode --------")
 
-        pro_files = []
-        for dirpath, subdirs, files in os.walk(args.path):
-            for x in files:
-                if x.endswith(".pro"):
-                    pro_files.append(os.path.join(dirpath, x))
-                    break
+        pro_files = get_all_pro_files_from_dir_tree(dir)
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))
