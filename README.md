@@ -1,4 +1,4 @@
-# QMakeToCMake [![Build Status](https://travis-ci.org/davidtazy/QMakeToCMake.svg?branch=master)](https://travis-ci.org/davidtazy/QMakeToCMake)
+# QMakeToCMake [![Build Status](https://travis-ci.org/davidtazy/QMakeToCMake.svg?branch=master)](https://travis-ci.org/davidtazy/QMakeToCMake) [![Coverage Status](https://coveralls.io/repos/github/davidtazy/QMakeToCMake/badge.svg?branch=master)](https://coveralls.io/github/davidtazy/QMakeToCMake?branch=master)
 
 Helper script to move qmake (Qt5) based subdirs/project to cmake
 
