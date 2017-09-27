@@ -26,7 +26,7 @@ will be usefull if lots of pro file to convert
 
 libToto.pro:
 ```
-TEMPLATE=app
+TEMPLATE=lib
 CONFIG+=c++11
 TARGET=Toto
 SOURCES=aaa.cpp\
