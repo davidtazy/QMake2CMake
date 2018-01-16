@@ -42,5 +42,3 @@ class TestQMakeToCMake(TestCase):
         self.assertEqual(QMakeToCMake.ToQtModule('core'),'Core')
         self.assertEqual(QMakeToCMake.ToQtModule('printsupport'),'PrintSupport')
         self.assertIsNone(QMakeToCMake.ToQtModule('not_qt_module'))
-
-

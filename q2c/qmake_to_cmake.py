@@ -109,14 +109,21 @@ class QMakeToCMake:
             cmake.enable_cpp11()
 
         # customize
-        if self.config_visitor is not None:
-            for config in qmake.CONFIG:
-                self.config_visitor.visit(cmake, config)
+        self.customize(self.config_visitor, qmake, cmake)
 
         self.cmakefile =cmake.write()
         print('----------------\nproject created')
 
     def get_cmakefile(self):
         return self.cmakefile
+
+    @staticmethod
+    def customize(config_visitor, qmake, cmake):
+        if config_visitor is not None:
+            for config in qmake.CONFIG:
+                config_visitor.visit(cmake, 'CONFIG', config)
+            for var in qmake.user_variables_dict:
+                for val in qmake.user_variables_dict[var]:
+                    config_visitor.visit(cmake, var, val)
 
 

@@ -1,10 +1,18 @@
 {
-  "add_lib_XXX": {
-    "function": "target_link_libraries",
-    "arg": "libXXX"
+  "CONFIG": {
+    "add_lib_XXX": {
+      "function": "target_link_libraries",
+      "arg": "libXXX"
+    },
+    "add_lib_YYY": {
+      "function": "target_link_libraries",
+      "arg": "libYYY"
+    }
   },
-  "add_lib_YYY": {
-    "function": "target_link_libraries",
-    "arg": "libYYY"
+  "MY_VAR":{
+    "add_lib_ZZZ": {
+      "function": "target_link_libraries",
+      "arg": "ZZZ"
+    }
   }
 }

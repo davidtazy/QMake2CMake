@@ -23,6 +23,7 @@ class QMakeParser:
         self.TEMPLATE =["app"]
         self.TRANSLATIONS =[]
         self.need_moc = False
+        self.user_variables_dict = dict()
 
     def isSubdirsProject(self):
         return self.TEMPLATE == "subdirs"
@@ -97,6 +98,8 @@ class QMakeParser:
                         sl = self.SUBDIRS
                     elif matchObj.group(1) == "TRANSLATIONS":
                         sl = self.TRANSLATIONS
+                    else:
+                        self.addUserVariable(matchObj.group(1),op, matchObj.group(3))
 
                     if sl is not None:
                         self.operateOnVar(sl, op, matchObj.group(3) );
@@ -123,6 +126,12 @@ class QMakeParser:
         else:
             for val in values:
                 sl.append(val)
+
+    def addUserVariable(self,var_name,op,values ):
+        if var_name not in self.user_variables_dict:
+            self.user_variables_dict[var_name] = []
+        self.operateOnVar(self.user_variables_dict[var_name],op,values)
+
 
 
 

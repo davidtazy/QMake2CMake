@@ -20,8 +20,8 @@ will be usefull if lots of pro file to convert
 - CONFIG-=qt , no Qt dependencies
 - DEFINES
 - INCLUDEPATH
-- CONFIG custom vars can define new lines on cmakelist.txt with a json config file (see [example/config.json](example/config.json))
-
+- CONFIG values and custom variable can define new lines on cmakelist.txt with a json config file (see [example/config.json](example/config.json))
+- 
 # Examples
 
 libToto.pro:

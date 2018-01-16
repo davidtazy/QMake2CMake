@@ -48,6 +48,8 @@ bbb'''
 TEMPLATE=app
 CONFIG+=c++11
 CONFIG -= qt
+MY_VAR = ABC DEF
+MY_SECOND_VAR += GHI
 TARGET=appli_coucou
 SOURCES=aaa.h\\
 bbb.h
@@ -64,6 +66,7 @@ bbb.h
         self.assertFalse( "qt" in decoder.CONFIG)
         self.assertTrue( decoder.TARGET  == "appli_coucou")
         self.assertListEqual( decoder.SOURCES  , ["aaa.h", "bbb.h"])
+        self.assertDictEqual(decoder.user_variables_dict, {'MY_VAR':['ABC', 'DEF'],'MY_SECOND_VAR':['GHI']})
 
         print("done")
 
