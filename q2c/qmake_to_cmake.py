@@ -85,7 +85,10 @@ class QMakeToCMake:
             cmake.enable_qt_auto_moc()
 
         if qmake.isTemplateLib():
-            cmake.add_library(" ".join(depends_files))
+            if 'plugin' in qmake.CONFIG:
+                cmake.add_library('MODULE ' + " ".join(depends_files))
+            else:
+                cmake.add_library( " ".join(depends_files))
         elif qmake.isTemplateApp():
             cmake.add_executable(" ".join(depends_files))
 

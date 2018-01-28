@@ -91,3 +91,8 @@ QT+=declarative
         decoder = QMakeParser()
         decoder.parse(pro_file)
         print("done")
+
+    def test_multiline_variables(self):
+        lines = ['SOURCES=aaa.h\\   \n','bbb.h\n']
+        decoder = QMakeParser()
+        self.assertListEqual(decoder.simplify_multiline_variable(lines), ["SOURCES=aaa.h bbb.h"])

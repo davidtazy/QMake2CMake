@@ -93,7 +93,7 @@ def main():
     else:
         print("------- recursive mode --------")
 
-        pro_files = get_all_pro_files_from_dir_tree(dir)
+        pro_files = get_all_pro_files_from_dir_tree(args.path)
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))

@@ -34,18 +34,36 @@ class QMakeParser:
     def isTemplateApp(self):
         return self.TEMPLATE == "app"
 
+
+    def simplify_multiline_variable(self, file_lines):
+        simple_lines = []
+        line_number = 0
+        line = file_lines[line_number]
+
+        while  line_number < len(file_lines):
+            line = line.rstrip('\n')
+            line = line.strip(' ')
+            line_number+=1
+            if  line.endswith('\\'):
+                line = line.rstrip('\\')
+                line +=' ' + file_lines[line_number]
+            else:
+                simple_lines.append(line)
+                if line_number < len(file_lines):
+                    line = file_lines[line_number]
+        return simple_lines#file_content.replace("\\\n", " ")
+
     def parse(self,pro_file):
 
         self.PRO_FILE = os.path.basename(pro_file).split('.')[0]
 
-        work = ""
+        lines = []
         with open(pro_file, 'r') as f:
-            work = f.read()
+            for line in f:
+                lines.append(line)
 
         #simple hack to variable lists
-        work = work.replace("\\\n"," ")
-
-        lines = work.split('\n')
+        lines = self.simplify_multiline_variable(lines)
 
         pattern = '^\s*(\w+)\s*([-+*]?=)\s*(.*)$'
 
