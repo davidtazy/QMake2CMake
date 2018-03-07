@@ -5,7 +5,8 @@ node {
         sh 'rm -rf dist/*'
    
         
-        stage 'Build .whl'            
+        stage 'Build .whl'     
+            sh 'ls -l'
             sh 'python setup.py bdist_wheel'
            
 
