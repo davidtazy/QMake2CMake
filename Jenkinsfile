@@ -2,7 +2,7 @@
 node {        
         stage 'Cleanup workspace'
         sh 'chmod 777 -R .'
-        sh 'rm -rf *'
+        sh 'rm -rf dist/*'
    
         
         stage 'Build .whl'            
