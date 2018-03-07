@@ -1,4 +1,5 @@
 
+node {        
         stage 'Cleanup workspace'
         sh 'chmod 777 -R .'
         sh 'rm -rf *'
@@ -27,4 +28,4 @@
             build job: 'publish-local', parameters: [
                 string(name: 'artifact_source', value: "${currentBuild.absoluteUrl}/artifact/dist/*zip*/dist.zip"),
                 string(name: 'source_branch', value: "${env.BRANCH_NAME}")]
-  
+}
