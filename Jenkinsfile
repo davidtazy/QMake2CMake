@@ -1,6 +1,4 @@
-node('docker') {
 
-    docker.image('cambuilder:latest').inside('-u root') {
         stage 'Cleanup workspace'
         sh 'chmod 777 -R .'
         sh 'rm -rf *'
@@ -29,5 +27,4 @@ node('docker') {
             build job: 'publish-local', parameters: [
                 string(name: 'artifact_source', value: "${currentBuild.absoluteUrl}/artifact/dist/*zip*/dist.zip"),
                 string(name: 'source_branch', value: "${env.BRANCH_NAME}")]
-    }
-}
+  
