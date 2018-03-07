@@ -3,6 +3,7 @@ node {
         stage 'Cleanup workspace'
         sh 'chmod 777 -R .'
         sh 'rm -rf dist/*'
+        checkout scm
    
         
         stage 'Build .whl'     
