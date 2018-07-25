@@ -113,7 +113,13 @@ def entry_point():
 
     parser = create_parser()
     args = parser.parse_args()
-    main(args.recursive, args.dry_run, args.show, args.config, args.path, input)
+    main(recursive=args.recursive,
+         dry_run=args.dry_run,
+         show=args.show,
+         config=args.config,
+         path=args.path,
+         wait_for_key_pressed_method=input,
+         show_file_method=webbrowser.open_new_tab)
     sys.exit(0)
 
 
