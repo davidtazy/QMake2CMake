@@ -15,7 +15,7 @@ setup(name='QMakeToCMake',
       license='MIT',
       packages=['q2c'],
       entry_points = {
-        'console_scripts': ['q2c=q2c.command_line:main'],
+        'console_scripts': ['q2c=q2c.command_line:entry_point'],
       },
       install_requires=[ ],
       test_suite="tests",

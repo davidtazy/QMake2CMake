@@ -38,7 +38,7 @@ def dict_from_json_file(json_file):
 
 
 
-def TryConvert(path, dry_run, show, config):
+def TryConvert(path, dry_run, show, config,show_method = webbrowser.open_new_tab):
     converter = QMakeToCMake()
 
     dico = dict_from_json_file(config)
@@ -54,8 +54,8 @@ def TryConvert(path, dry_run, show, config):
         try:
             converter.convert(pro_file)
             if show:
-                webbrowser.open_new_tab(pro_file)
-                webbrowser.open_new_tab(converter.get_cmakefile())
+                show_method(pro_file)
+                show_method(converter.get_cmakefile())
         except CMakeFileAlreadyExistsError as e:
             print(e.value)
 
@@ -85,7 +85,10 @@ def create_parser():
                         help='json file defining dictionnary between CONFIG values in .pro file and cmake function')
     return parser
 
-def main(recursive,dry_run,show,config,path):
+
+
+
+def main(recursive,dry_run,show,config,path,wait_for_key_pressed_method,show_file_method):
 
     if recursive is False:
         TryConvert(path, dry_run, show, config )
@@ -96,12 +99,23 @@ def main(recursive,dry_run,show,config,path):
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))
-            TryConvert(pro_file, dry_run, show,config)
+            TryConvert(pro_file, dry_run, show,config,show_file_method)
             if show is True:
-               raw_input("press enter to continue")
+                wait_for_key_pressed_method("press enter to continue")
 import sys
-if __name__ == '__main__':
+
+def entry_point():
+    # python 2/3 compat
+    try:
+        input = raw_input
+    except NameError:
+        pass
+
     parser = create_parser()
     args = parser.parse_args()
-    main(args.recursive, args.dry_run, args.show, args.config, args.path)
+    main(args.recursive, args.dry_run, args.show, args.config, args.path, input)
     sys.exit(0)
+
+
+if __name__ == '__main__':
+    entry_point()
