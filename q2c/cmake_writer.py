@@ -1,4 +1,3 @@
-import semver as sv
 import os
 import sys
 import contextlib
@@ -15,23 +14,6 @@ def smart_open(filename=None):
     finally:
         if fh is not sys.stdout:
             fh.close()
-
-class Version:
-    version = sv.VersionInfo(0, 0, 0, None, None)
-
-    def __init__(self, version_str):
-        parts = sv.parse(version_str)
-        parts['prerelease'] = None
-        parts['build'] = None
-
-        maj = parts['major']
-
-        self.version = sv.VersionInfo(
-            parts['major'], parts['minor'], parts['patch'],
-            parts['prerelease'], parts['build'])
-
-    def toString(self):
-        return sv.format_version(self.version.major, self.version.minor, self.version.patch)
 
 
 class Var:
@@ -59,7 +41,7 @@ class CMakeWriter:
 
     def __init__(self, path = None):
 
-        self.minimum = Version("3.0.0")
+        self.minimum = "3.0.0"
         self.project_name = ""
         self.vars = []
         self.cmakefile = None
@@ -93,7 +75,7 @@ class CMakeWriter:
         return self.add_binary is not None
 
     def setCMakeMinimum(self, minimum):
-        self.cmake_minimum = Version(minimum)
+        self.cmake_minimum = minimum
 
     def setProjectName(self, project_name):
         self.project_name = project_name
@@ -158,7 +140,7 @@ class CMakeWriter:
 
         with smart_open(self.cmakefile) as f:
 
-            f.writelines("cmake_minimum_required(VERSION {} )\n".format(self.minimum.toString()))
+            f.writelines("cmake_minimum_required(VERSION {} )\n".format(self.minimum))
             if len(self.project_name) > 0:
                 f.writelines("project({})\n".format(self.project_name))
 

@@ -17,8 +17,6 @@ setup(name='QMakeToCMake',
       entry_points = {
         'console_scripts': ['q2c=q2c.command_line:main'],
       },
-      install_requires=[
-          'semver',
-      ],
+      install_requires=[ ],
       test_suite="tests",
       zip_safe=False)
