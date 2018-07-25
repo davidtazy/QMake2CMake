@@ -68,38 +68,40 @@ def get_all_pro_files_from_dir_tree(dir):
                 break
     return pro_files
 
-
-def main():
-
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("path", help="directory or file")
 
-    parser.add_argument('-n','--dry-run', help="print cmakelist.txt on the console",
+    parser.add_argument('-n', '--dry-run', help="print cmakelist.txt on the console",
                         action="store_true")
 
     parser.add_argument('-r', '--recursive', help="walk all subdirectories",
                         action="store_true")
 
-    parser.add_argument('-s','--show',help="show result file(s)",
+    parser.add_argument('-s', '--show', help="show result file(s)",
                         action="store_true")
 
-    parser.add_argument('-c','--config',default=None,
+    parser.add_argument('-c', '--config', default=None,
                         help='json file defining dictionnary between CONFIG values in .pro file and cmake function')
+    return parser
 
-    args = parser.parse_args()
+def main(recursive,dry_run,show,config,path):
 
-    if args.recursive is False:
-        TryConvert(args.path, args.dry_run, args.show, args.config )
+    if recursive is False:
+        TryConvert(path, dry_run, show, config )
     else:
         print("------- recursive mode --------")
 
-        pro_files = get_all_pro_files_from_dir_tree(args.path)
+        pro_files = get_all_pro_files_from_dir_tree(path)
 
         for pro_file in pro_files:
             print("start %s conversion\n"%(pro_file))
-            TryConvert(pro_file, args.dry_run, args.show,args.config)
-            if args.show is True:
+            TryConvert(pro_file, dry_run, show,config)
+            if show is True:
                raw_input("press enter to continue")
-
+import sys
 if __name__ == '__main__':
-    main()
+    parser = create_parser()
+    args = parser.parse_args()
+    main(args.recursive, args.dry_run, args.show, args.config, args.path)
+    sys.exit(0)

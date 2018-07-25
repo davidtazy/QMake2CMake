@@ -1,5 +1,5 @@
 from unittest import TestCase
-from q2c.command_line import get_pro_file_from_path,dict_from_json_file,get_all_pro_files_from_dir_tree,TryConvert
+from q2c.command_line import get_pro_file_from_path,dict_from_json_file,get_all_pro_files_from_dir_tree,TryConvert,main
 import tempfile
 import shutil
 import os
@@ -132,5 +132,8 @@ class TestCommandLine(TestCase):
         self.assertFalse( os.path.exists(os.path.join(self.temp_dir,"CMakeLists.txt")))
 
 
-
+    def test_main(self):
+        self.create_pro_file("proj.pro")
+        main(False,False,False,None,os.path.join(self.temp_dir,"proj.pro"))
+        self.assertTrue(os.path.exists(os.path.join(self.temp_dir, "CMakeLists.txt")))
 
