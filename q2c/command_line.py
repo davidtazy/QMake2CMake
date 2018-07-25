@@ -106,10 +106,11 @@ import sys
 
 def entry_point():
     # python 2/3 compat
+    input_method = None
     try:
-        input = raw_input
+        input_method = raw_input
     except NameError:
-        pass
+        input_method = input
 
     parser = create_parser()
     args = parser.parse_args()
@@ -118,7 +119,7 @@ def entry_point():
          show=args.show,
          config=args.config,
          path=args.path,
-         wait_for_key_pressed_method=input,
+         wait_for_key_pressed_method=input_method,
          show_file_method=webbrowser.open_new_tab)
     sys.exit(0)
 
