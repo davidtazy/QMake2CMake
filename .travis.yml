@@ -11,6 +11,10 @@ install:
 # command to run tests
 script:
   - coverage run -m unittest discover -s q2c
+  - python setup.py install
+  - q2c --help
+  - q2c example -c example/config.json example
+  - test -e example/CMakeLists.txt
 after_success: 
   - coverage report
   - coveralls
