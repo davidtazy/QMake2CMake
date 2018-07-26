@@ -16,5 +16,6 @@ script:
   - coverage run -m q2c.command_line -c example/config.json example
   - test -e example/CMakeLists.txt
 after_success: 
+  - coverage combine
   - coverage report
   - coveralls
